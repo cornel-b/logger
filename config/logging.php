@@ -58,6 +58,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'database' => [
+            'driver' => 'custom',
+            'via' => \App\Logging\DatabaseLogger::class,
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
