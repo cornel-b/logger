@@ -17,9 +17,6 @@ class DatabaseLogHandler extends AbstractProcessingHandler
         parent::__construct($level);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function write(LogRecord $record): void
     {
         $request = request();
@@ -37,8 +34,6 @@ class DatabaseLogHandler extends AbstractProcessingHandler
 
         $recordArray = $record->toArray();
 
-        // Get stack trace if available
-        $stackTrace = '';
         if (isset($recordArray['context']['exception']) && $recordArray['context']['exception'] instanceof \Throwable) {
             $exception = $recordArray['context']['exception'];
             $stackTrace = $exception->getTraceAsString();
@@ -46,15 +41,6 @@ class DatabaseLogHandler extends AbstractProcessingHandler
             $stackTrace = $recordArray['message']."\n".json_encode($recordArray['context'], JSON_PRETTY_PRINT);
         }
 
-        // Get only the current database connection
-        $connectionName = Config::get('database.default');
-        $dbConnections = [];
-        if ($connectionName) {
-            $connection = Config::get('database.connections.'.$connectionName);
-            if (isset($connection['database'])) {
-                $dbConnections[$connectionName] = $connection['database'];
-            }
-        }
         $dbConnections = $this->getActiveConnections();
 
         AppLog::create([
@@ -74,10 +60,8 @@ class DatabaseLogHandler extends AbstractProcessingHandler
     {
         $dbConnections = [];
 
-        // Get the default connection
         $defaultConnection = Config::get('database.default');
 
-        // Get all connections that have been established
         $connections = DB::getConnections();
 
         // If no connections are active, get at least the default
@@ -87,16 +71,13 @@ class DatabaseLogHandler extends AbstractProcessingHandler
                 $dbConnections[$defaultConnection] = $connection['database'];
             }
         } else {
-            // For each active connection, get the database name
             foreach ($connections as $name => $connection) {
                 try {
-                    // Try to get connection config
                     $config = $connection->getConfig();
                     if (isset($config['database'])) {
                         $dbConnections[$name] = $config['database'];
                     }
                 } catch (\Exception $e) {
-                    // If we can't get config for some reason, try from the config
                     $configConnection = Config::get('database.connections.'.$name);
                     if (isset($configConnection['database'])) {
                         $dbConnections[$name] = $configConnection['database'];

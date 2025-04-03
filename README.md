@@ -2,7 +2,7 @@
 
 ### Set up
 
-````
+```
 git clone https://github.com/cornel-b/logger
 cd logger
 copy .env.example .env
@@ -10,6 +10,7 @@ composer install
 php artisan serve
 ```
 
+### Specifications
 
 ```
 I have added a new AppLog model which is used to save log entries in the app_log table
