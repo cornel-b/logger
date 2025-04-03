@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppLogsController;
 use App\Http\Controllers\ErrorsController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,3 +14,4 @@ Route::prefix('test')->group(function () {
     Route::get('/log-only', [ErrorsController::class, 'logOnly'])->name('test.log');
 });
 
+Route::get('/app-logs', [AppLogsController::class, 'showLogs'])->name('app_logs.index');

@@ -1,8 +1,20 @@
-## Logger changes
+## Logger 
+
+### Set up
+
+````
+git clone https://github.com/cornel-b/logger
+cd logger
+copy .env.example .env
+composer install
+php artisan serve
+```
+
 
 ```
 I have added a new AppLog model which is used to save log entries in the app_log table
-To only log exceptions to the database, the LOG_LEVEL can be set to `error`
+To only log exceptions to the database, the LOG_LEVEL can be set to `error`.
+Index has been added for created_at, since it's used for sorting the records.
 
 visit
 
