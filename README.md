@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/cornel-b/logger
 cd logger
-copy .env.example .env
+cp .env.example .env
 composer install
 php artisan serve
 ```
